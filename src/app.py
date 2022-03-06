@@ -11,7 +11,8 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from flask_jwt_extended import JWTManager
-#from models import Person
+#from models import Person 
+#de modelos importar Persona
 
 
 ENV = os.getenv("FLASK_ENV")
@@ -19,7 +20,8 @@ static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
-# database condiguration
+# database condiguration 
+# configuración de la base de datos
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace("postgres://", "postgresql://")
@@ -29,7 +31,9 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
-# Allow CORS requests to this API
+# Allow CORS requests to this API 
+# Permitir solicitudes CORS a esta API
+
 CORS(app)
 
 app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_KEY') 
@@ -38,14 +42,17 @@ jwt = JWTManager(app)
 setup_admin(app)
 
 # Add all endpoints form the API with a "api" prefix
+## Agregue todos los puntos finales de la API con el prefijo "api"
 app.register_blueprint(api, url_prefix='/api')
 
 # Handle/serialize errors like a JSON object
+# Manejar/serializar errores como un objeto JSON
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
 # generate sitemap with all your endpoints
+# generar un mapa del sitio con todos sus puntos finales
 @app.route('/')
 def sitemap():
     if ENV == "development":
@@ -53,6 +60,7 @@ def sitemap():
     return send_from_directory(static_file_dir, 'index.html')
 
 # any other endpoint will try to serve it like a static file
+# cualquier otro punto final intentará servirlo como un archivo estático
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
     if not os.path.isfile(os.path.join(static_file_dir, path)):

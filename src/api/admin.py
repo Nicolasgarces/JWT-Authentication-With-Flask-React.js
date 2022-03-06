@@ -11,7 +11,9 @@ def setup_admin(app):
 
     
     # Add your models here, for example this is how we add a the User model to the admin
+    # Agregue sus modelos aquí, por ejemplo, así es como agregamos un modelo de usuario al administrador
     admin.add_view(ModelView(User, db.session))
 
     # You can duplicate that line to add mew models
+    # Puedes duplicar esa línea para agregar nuevos modelos
     # admin.add_view(ModelView(YourModelName, db.session))

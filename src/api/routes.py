@@ -31,3 +31,17 @@ def login():
 
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token) 
+
+
+@api.route("/user/profile", methods=["GET"])
+@jwt_required()
+def get_profile():
+    # Access the identity of the current user with get_jwt_identity
+    # Accede a la identidad del usuario actual con get_jwt_identity
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()
+
+    if current_user != user.email:
+        return jsonify(logged_in_as=current_user), 400
+        
+    return jsonify(user.serialize()), 200
